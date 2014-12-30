@@ -3,8 +3,6 @@ Billys = function( params ){
 	this.scene = params.scene
 	this.camera = params.camera
 
-	this.onStopCallback = params.onStopCallback
-
 	this.depth = params.depth || 5000
 
 	this.path = 'media/video/billy/billy'
@@ -93,8 +91,8 @@ Billys.prototype.update = function( delta ) {
 			obj.texture.needsUpdate = true
 		}
 	}
-
-	TWEEN.update(  )
+	if( this.tween )
+		TWEEN.update()
 
 }
 
@@ -105,7 +103,7 @@ Billys.prototype.start = function() {
 	}
 
 	this.billysObject = new THREE.Object3D()
-	this.billysObject.position.z = -3 * this.depth
+	this.billysObject.position.z = -this.depth
 	this.billysObject.position.y = 20
 	this.billysObject.rotation.x = .035
 
@@ -133,9 +131,9 @@ Billys.prototype.start = function() {
 	this.camera.lookAt( this.billysObject.position )
 
 	this.tween = new TWEEN.Tween( this.billysObject.position )
-	        .to( { z: 1000 }, 360000 )
+	        .to( { z: 1000 }, 180000 )
 	        .start()
-	        .onComplete( _this.stop() )
+	        // .onComplete()
 
 }
 
@@ -147,7 +145,5 @@ Billys.prototype.stop = function() {
 	this.scene.remove( billysObject )
 
 	this.activeVideos = []
-
-	this.onStopCallback( this )
 
 }

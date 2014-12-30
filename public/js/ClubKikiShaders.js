@@ -7,7 +7,11 @@ ClubKikiShaders = {
 
 		vertexShader: [
 
+			"varying vec2 vUv;",
+
 			"void main() {",
+
+				"vUv = uv;",
 
 				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
 
@@ -17,9 +21,107 @@ ClubKikiShaders = {
 
 		fragmentShader: [
 
+			"varying vec2 vUv;",
+
 			"void main() {",
 
 				"gl_FragColor = vec4( 1.0, 0.0, 0.0, 1.0 );",
+
+			"}"
+
+		].join("\n")
+
+	},
+
+	'BleedFeedbackShader': {
+
+		uniforms: {
+			"uFeedbackTex": { type: "t", value: null },
+			"uColorTex": { type: "t", value: null },
+			"uSurfaceTex": { type: "t", value: null },
+			"uGravity": { type: "f", value: 0.5 },
+		},
+
+		vertexShader: [
+
+			"varying vec2 vUv;",
+
+			"void main() {",
+
+				"vUv = uv;",
+
+				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+
+			"}"
+
+		].join("\n"),
+
+		fragmentShader: [
+
+			"varying vec2 vUv;",
+
+			"uniform sampler2D uFeedbackTex;",
+
+			"uniform sampler2D uColorTex;",
+
+			"uniform sampler2D uSurfaceTex;",
+
+			"uniform float uGravity;",
+
+			"void main() {",
+
+				"vec4 s = texture2D( uSurfaceTex, vUv );",
+				"vec4 c = texture2D( uFeedbackTex, vUv );",
+				"float smear =  ( 1.0 - ( ( c.r + c.g + c.b ) / 3.0 ) ) * .05;",
+				"vec4 f = texture2D( uColorTex, vec2( vUv.x, vUv.y * ( uGravity  + ( -.1 * s.r ) * smear) ) );",				
+
+				"gl_FragColor = vec4( mix( c.r, f.r, ( .3 * smear * s.r ) ), 0.0, 0.0, 1.0 );",
+
+			"}"
+
+		].join("\n")
+
+	},
+
+	'BleedDisplayShader': {
+
+		uniforms: {
+			"uHistoryTex": { type: "t", value: null },
+			"uColorTex": { type: "t", value: null },
+			"uSurfaceTex": { type: "t", value: null },
+		},
+
+		vertexShader: [
+
+			"uniform sampler2D uHistoryTex;",
+
+			"varying vec2 vUv;",
+
+			"void main() {",
+
+				"vUv = uv;",
+
+				"gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+
+			"}"
+
+		].join("\n"),
+
+		fragmentShader: [
+
+			"uniform sampler2D uHistoryTex;",
+
+			"uniform sampler2D uColorTex;",
+
+			"varying vec2 vUv;",
+
+			"void main() {",
+
+				"vec4 h = texture2D( uHistoryTex, vUv );",
+
+				"vec4 c = texture2D( uColorTex, vec2( vUv.x, vUv.y + h.r ) );",
+
+				"gl_FragColor = c;",
 
 			"}"
 
