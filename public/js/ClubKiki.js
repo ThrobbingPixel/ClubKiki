@@ -77,6 +77,20 @@ ClubKiki.prototype.init = function() {
 
   document.querySelector( '#main' ).appendChild( this.renderer.domElement )
     
+
+  var
+  geometry = new THREE.PlaneGeometry( 500, 500, 4, 4 ),
+  material = new THREE.MeshBasicMaterial(
+  {
+    transparent:true,
+    map: THREE.ImageUtils.loadTexture( 'images/bleed/halebopp.png' )
+  }),
+  backgroundMesh = new THREE.Mesh( geometry, material )
+  this.scene.add( backgroundMesh )
+
+
+  this.scene.add( )
+  
   
   this.controls = new THREE.OrbitControls( this.camera )
 
@@ -107,9 +121,9 @@ ClubKiki.prototype.start = function(){
     onStopCallback: this.onStopHandler
   }
 
-  this.activeParts.push( new this.parts[ 'Bleed' ]( params ) )
+  // this.activeParts.push( new this.parts[ 'Bleed' ]( params ) )
 
-  // this.activeParts.push( new this.parts[ 'Billys' ]( params ) )
+  this.activeParts.push( new this.parts[ 'Billys' ]( params ) )
 
   // this.activeParts.push( new this.parts[ 'BlackFriday' ]( params ) )
 
