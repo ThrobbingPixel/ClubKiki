@@ -15,7 +15,7 @@ ClubKiki = function ( params ){
 
 ClubKiki.prototype.render = function(){
 
-  this.controls.update()
+  // this.controls.update()
 
   var 
   delta = this.clock.getDelta(),
@@ -41,7 +41,7 @@ ClubKiki.prototype.init = function() {
   this.scene = new THREE.Scene()
 
   this.camera = new THREE.PerspectiveCamera( 45, this.windowWidth / this.windowHeight, 5, 10000 )
-  this.camera.position.set( 0, 5, 300)
+  // this.camera.position.set( 0, 5, 300)
 
   this.renderer = new THREE.WebGLRenderer({ antialias: true })
   this.renderer.setSize( this.windowWidth, this.windowHeight, false )
@@ -87,10 +87,6 @@ ClubKiki.prototype.init = function() {
   }),
   backgroundMesh = new THREE.Mesh( geometry, material )
   this.scene.add( backgroundMesh )
-
-
-  this.scene.add( )
-  
   
   this.controls = new THREE.OrbitControls( this.camera )
 

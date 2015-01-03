@@ -9,7 +9,13 @@ Billys = function( params ){
 	this.extension = '.mp4'
 	this.videoCount = 17
 
+	this.speed = 300
+
 	this.videoURLs = []
+
+	this.activeBillys = {}
+
+	this.deltaCount = 0
 
 	this.start()
 }
@@ -69,11 +75,20 @@ Billys.prototype.add = function( id ) {
 
 	var plane = new THREE.PlaneGeometry( 50, 50, 4, 4 )
 	var movieScreen = new THREE.Mesh( plane, this.activeVideos[ Math.floor( Math.random() * (this.activeVideos.length ) ) ].material )
-
 	movieScreen.position.set( ( Math.random() * 300 ) - 150,  (Math.random() * 10), Math.random() * this.depth )
 	movieScreen.position.x += ( Math.sin( movieScreen.position.z /300 ) * Math.sin( movieScreen.position.z / 900 ) * 200 )
 	this.billysObject.add( movieScreen )
-	
+	this.activeBillys[ id ] = movieScreen
+	// this.camera.position.set(0,150,300)
+
+}
+
+Billys.prototype.resetPosition = function( id ) {
+
+	var movieScreen = this.activeBillys[ id ]
+
+	movieScreen.position.z = Math.random() * 2
+	// movieScreen.position.x += ( Math.sin( movieScreen.position.z /300 ) * Math.sin( movieScreen.position.z / 900 ) * 200 )
 	// this.camera.position.set(0,150,300)
 
 }
@@ -94,6 +109,16 @@ Billys.prototype.update = function( delta ) {
 	if( this.tween )
 		TWEEN.update()
 
+	for ( var b in this.activeBillys ){
+		if( this.activeBillys[ b ].position.z > 5000 )
+			this.resetPosition( b )
+		else
+			this.activeBillys[ b ].position.z += delta * this.speed
+	}
+
+	this.deltaCount += delta
+	this.camera.position.y = -10 + (( ( 50 * Math.sin( this.deltaCount * .5 ) ) - 40 ) +  ( ( 50 * Math.sin( this.deltaCount * .1) ) - 40 ) + ( ( 50 * Math.sin( this.deltaCount * .01) ) - 40 ))
+	this.camera.rotation.z += .001 * ( Math.sin( this.deltaCount * .5 ) + Math.sin( this.deltaCount * .05) )
 }
 
 Billys.prototype.start = function() {
@@ -103,7 +128,7 @@ Billys.prototype.start = function() {
 	}
 
 	this.billysObject = new THREE.Object3D()
-	this.billysObject.position.z = -this.depth
+	// this.billysObject.position.z = -this.depth
 	this.billysObject.position.y = 20
 	this.billysObject.rotation.x = .035
 
@@ -128,19 +153,20 @@ Billys.prototype.start = function() {
 
 	console.log( this.activeVideos )
 
-	this.camera.lookAt( this.billysObject.position )
+	// this.camera.lookAt( this.billysObject.position )
+	this.camera.position.z = 5000
 
-	this.tween = new TWEEN.Tween( this.billysObject.position )
-	        .to( { z: 1000 }, 180000 )
-	        .start()
+	// this.tween = new TWEEN.Tween( this.billysObject.position )
+	//         .to( { z: 1000 }, 180000 )
+	//         .start()
 	        // .onComplete()
 
 }
 
 Billys.prototype.stop = function() {
 
-	if ( this.tween )
-		TWEEN.remove( this.tween )
+	// if ( this.tween )
+	// 	TWEEN.remove( this.tween )
 
 	this.scene.remove( billysObject )
 
