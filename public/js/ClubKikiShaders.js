@@ -144,7 +144,7 @@ ClubKikiShaders = {
 			"uFade": { type: "f", value: 1.0 },
 			"uTex": { type: "t", value: null },
 			'uZoom': { type: "f", value: 1.0 },
-			"uBlendMode": { type: "i", value: 0 } //0:default, 1:add, 2: subtract, 3:multiply
+			"uBlend": { type: "i", value: 0 }
 		},
 
 		vertexShader: [
@@ -169,13 +169,17 @@ ClubKikiShaders = {
 
 			"uniform float uZoom;",
 
+			"uniform int uBlend;",
+
 			"varying vec2 vUv;",
 
 			"void main() {",
 
-				"vec4 c = texture2D( uTex, vec2(  ( ( vUv.x + ( .5 * uZoom ) ) - .5 * uZoom ), ( ( vUv.y + ( .5 * uZoom ) ) - .5 * uZoom ) ) );",
-
-				"gl_FragColor = vec4( c.r, c.g, c.b, sqrt( 5.0 * c.r ) * (sqrt( 1.0 - ( 2.0 * distance( vUv, vec2( .5, .5 ) ) ) * uFade )));",
+				"vec4 t = texture2D( uTex, vec2(  ( ( vUv.x + ( .5 * uZoom ) ) - .5 * uZoom ), ( ( vUv.y + ( .5 * uZoom ) ) - .5 * uZoom ) ) );",
+				"vec4 c = vec4( t.r, t.g, t.b, (sqrt( 1.0 - ( 2.0 * distance( vUv, vec2( .5, .5 ) ) ) * uFade )));",
+				"if( uBlend == 1 ) ",
+				"	c.a *= sqrt( 5.0 * t.r );",
+				"gl_FragColor = c;",
 
 			"}"
 

@@ -21,8 +21,8 @@ ClubKiki.prototype.render = function(){
   delta = this.clock.getDelta(),
   _this = this
 
- this.composer.render()
- // this.renderer.render(  this.scene, this.camera )
+ // this.composer.render()
+ this.renderer.render(  this.scene, this.camera )
 
   _.each( this.activeParts, function( part ){
 
@@ -79,14 +79,16 @@ ClubKiki.prototype.init = function() {
     
 
   var
-  geometry = new THREE.PlaneGeometry( 500, 500, 4, 4 ),
+  geometry = new THREE.PlaneGeometry( 9000, 9000, 4, 4 ),
   material = new THREE.MeshBasicMaterial(
   {
     transparent:true,
     map: THREE.ImageUtils.loadTexture( 'images/bleed/halebopp.png' )
-  }),
-  backgroundMesh = new THREE.Mesh( geometry, material )
-  this.scene.add( backgroundMesh )
+  })
+
+  this.backgroundMesh = new THREE.Mesh( geometry, material )
+  this.backgroundMesh.position.z = -1000
+  this.scene.add( this.backgroundMesh )
   
   this.controls = new THREE.OrbitControls( this.camera )
 
@@ -114,7 +116,8 @@ ClubKiki.prototype.start = function(){
     camera: this.camera,
     scene: this.scene,
     renderer: this.renderer,
-    onStopCallback: this.onStopHandler
+    onStopCallback: this.onStopHandler,
+    backgroundMesh: this.backgroundMesh
   }
 
   // this.activeParts.push( new this.parts[ 'Bleed' ]( params ) )
